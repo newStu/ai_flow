@@ -29,7 +29,7 @@
 1. **克隆项目**
 ```bash
 git clone <repository-url>
-cd demo
+cd ai_flow
 ```
 
 2. **初始化Spec-Kit项目**
@@ -106,7 +106,7 @@ speckit list
 ## 🏗️ 项目结构
 
 ```
-demo/
+ai_flow/
 ├── .speckit/                    # Spec-Kit配置目录
 │   ├── constitution.md         # 项目宪法
 │   ├── config.json             # 项目配置

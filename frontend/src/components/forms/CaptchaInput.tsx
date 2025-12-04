@@ -7,16 +7,28 @@ interface CaptchaInputProps extends React.InputHTMLAttributes<HTMLInputElement> 
   onRefresh: () => void;
 }
 
-const CaptchaInput: React.FC<CaptchaInputProps> = ({ label, imageUrl, onRefresh, ...props }) => {
+const CaptchaInput: React.FC<CaptchaInputProps> = ({
+  label,
+  imageUrl,
+  onRefresh,
+  ...props
+}) => {
   return (
     <div>
-      <label htmlFor={props.id} className="block text-sm font-medium text-gray-700">
+      <label
+        htmlFor={props.id}
+        className="block text-sm font-medium text-gray-700"
+      >
         {label}
       </label>
       <div className="mt-1 flex items-center">
-        <Input {...props} />
+        <Input label={label} {...props} />
         <img src={imageUrl} alt="Captcha" className="ml-2 h-10" />
-        <button type="button" onClick={onRefresh} className="ml-2 text-sm text-indigo-600 hover:text-indigo-500">
+        <button
+          type="button"
+          onClick={onRefresh}
+          className="ml-2 text-sm text-indigo-600 hover:text-indigo-500"
+        >
           Refresh
         </button>
       </div>

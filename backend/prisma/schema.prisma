@@ -14,43 +14,70 @@ model User {
   password        String
   emailVerified   Boolean  @default(false)
   status          String   @default("inactive") // active, inactive, locked
+  failedLoginAttempts Int  @default(0)
+  lockedUntil     DateTime?
+  lastLoginAt     DateTime?
+  loginCount      Int      @default(0)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   sessions        UserSession[]
   verificationCodes VerificationCode[]
   oauthAccounts   OAuthAccount[]
+  passwordHistories PasswordHistory[]
+
+  @@index([username])
+  @@index([email])
 }
 
 model UserSession {
   id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
   token     String   @unique
+  refreshToken String? @unique
   ipAddress String?
   userAgent String?
   expiresAt DateTime
   createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([token])
 }
 
 model VerificationCode {
-  id        Int      @id @default(autoincrecrement())
+  id        Int      @id @default(autoincrement())
   user      User?    @relation(fields: [userId], references: [id])
   userId    Int?
   email     String
   code      String
   type      String // register, login, reset_password
+  used      Boolean  @default(false)
   expiresAt DateTime
   createdAt DateTime @default(now())
+
+  @@index([email, type])
 }
 
 model OAuthAccount {
   id              Int      @id @default(autoincrement())
-  user            User     @relation(fields: [userId], references: [id])
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId          Int
   provider        String // google, github, wechat
   providerUserId  String
-  accessToken     String?
-  refreshToken    String?
+  accessToken     String?  @db.Text
+  refreshToken    String?  @db.Text
   createdAt       DateTime @default(now())
+  
   @@unique([provider, providerUserId])
+  @@index([userId])
+}
+
+model PasswordHistory {
+  id              Int      @id @default(autoincrement())
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          Int
+  passwordHash    String
+  createdAt       DateTime @default(now())
+
+  @@index([userId])
 }

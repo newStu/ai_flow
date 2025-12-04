@@ -4,6 +4,9 @@
 		"lint-staged": "^16.2.7"
 	},
 	"scripts": {
+		"dev": "cd ./backend && pnpm run start:dev", 
+		"start": "cd ./frontend && pnpm run dev",
+		"install": "cd ./backend && pnpm install && cd ../frontend && pnpm install",
 		"prepare": "husky"
 	},
 	"lint-staged": {

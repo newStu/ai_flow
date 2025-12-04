@@ -7,7 +7,7 @@ import Input from '../../components/forms/Input';
 import PasswordInput from '../../components/forms/PasswordInput';
 import Button from '../../components/ui/Button';
 import { useAuthStore } from '../../store/authStore';
-import { useRequest } from 'alova';
+import { useRequest } from 'alova/client';
 import { alova } from '../../services/api';
 import PasswordStrengthIndicator from '../../components/forms/PasswordStrengthIndicator';
 
@@ -23,10 +23,13 @@ const RegisterSchema = Yup.object().shape({
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const { setToken } = useAuthStore();
-  const { loading, error, send: register } = useRequest(
-    (values) => alova.Post('/users', values),
-    { immediate: false }
-  );
+  const {
+    loading,
+    error,
+    send: register,
+  } = useRequest((values) => alova.Post('/users', values), {
+    immediate: false,
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -38,12 +41,18 @@ const RegisterPage: React.FC = () => {
     validationSchema: RegisterSchema,
     onSubmit: async (values) => {
       try {
+        // Register user
         await register(values);
-        // You would typically redirect to a verification page or auto-login
-        alert('Registration successful!');
-        navigate('/login');
+
+        // Send verification email
+        await alova.Post('/auth/send-verification-email', {
+          email: values.email,
+        });
+
+        // Redirect to verification page
+        navigate('/verify-email', { state: { email: values.email } });
       } catch (err) {
-        // Handled by alova
+        console.error('Registration failed:', err);
       }
     },
   });
