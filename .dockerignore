@@ -1,0 +1,21 @@
+# Git
+.git
+.gitignore
+
+# Node
+node_modules
+npm-debug.log
+pnpm-debug.log
+yarn-error.log
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Env
+.env
+.env.*
+
+# Build artifacts
+dist
+build
